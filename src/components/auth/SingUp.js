@@ -75,7 +75,7 @@ function SignIn() {
                 </Grid>
                 <Grid item xs={12} sm={6}>
                     <Button variant="contained" onClick={handleSubmit} style={{ color: "white" }}>
-                        Sign In
+                        Sign Up
                     </Button>
                 </Grid>
                 <Grid item xs={12} sm={6}>
