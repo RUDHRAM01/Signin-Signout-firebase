@@ -2,11 +2,12 @@ import React from 'react'
 import { useEffect } from "react";
 import { collection, getDocs, addDoc, deleteDoc, doc, updateDoc } from "firebase/firestore";
 import { useState } from "react";
-import { db, storage } from "../../config/firebase";
+import { auth, db, storage } from "../../config/firebase";
 import { ref, uploadBytes } from 'firebase/storage';
+import Button from '@mui/material/Button'
+import { signOut } from 'firebase/auth';
 
-
-function Movies() {
+function Movies({setUser}) {
     const [config, setConfig] = useState({
         title : "",
         releaseDate:""
@@ -35,6 +36,16 @@ function Movies() {
         getMovieData();
     }
 
+    const handleSignOut = async (e) => {
+        e.preventDefault();
+        try {
+            await signOut(auth);
+            setUser(null);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     // const handleUpdate = async (id) => {
     //     const document1 = await doc(db, "movies", id);
     //     await updateDoc(document1, config);
@@ -48,6 +59,12 @@ function Movies() {
         await uploadBytes(storageRef, fileData);
     }
     return (
+        <>
+            <div style={{ display: "flex"}} >
+            <Button variant="contained" onClick={handleSignOut} style={{ color: "white" }}>
+                        Sign out
+                    </Button>
+            </div>
         <div style={{ display: "flex", gap: "20px", flexDirection: "column",alignItems:"center",justifyContent:"center" }}>
             <h4>CRUD </h4>
             <div>
@@ -74,7 +91,8 @@ function Movies() {
                     </div>
                 </>
             })}
-        </div>
+            </div>
+            </>
     )
 }
 

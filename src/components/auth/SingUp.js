@@ -5,11 +5,11 @@ import Container from '@mui/material/Container';
 import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
 import { auth, provider } from '../../config/firebase';
-import { createUserWithEmailAndPassword, signInWithPopup, signOut } from 'firebase/auth';
+import { createUserWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
 
 
 
-function SignIn() {
+function SignIn({setUser}) {
     const [config, setConfig] = useState({
         email: '',
         password: '',
@@ -18,7 +18,8 @@ function SignIn() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-           await createUserWithEmailAndPassword(auth, config.email, config.password);
+            await createUserWithEmailAndPassword(auth, config.email, config.password);
+            setUser(config.email);
         } catch (error) {
             console.log(error);
         }
@@ -28,15 +29,7 @@ function SignIn() {
         e.preventDefault();
         try {
             await signInWithPopup(auth, provider);
-        } catch (error) {
-            console.log(error);
-        }
-    }
-
-    const handleSignOut = async (e) => {
-        e.preventDefault();
-        try {
-            await signOut(auth);
+            setUser(auth?.currentUser?.email);
         } catch (error) {
             console.log(error);
         }
@@ -81,11 +74,6 @@ function SignIn() {
                 <Grid item xs={12} sm={6}>
                     <Button variant="contained" onClick={handleGoogleSignIn} style={{ color: "white" }}>
                         SignIn with Google
-                    </Button>
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                    <Button variant="contained" onClick={handleSignOut} style={{ color: "white" }}>
-                        Sign out
                     </Button>
                 </Grid>
             </Grid>
